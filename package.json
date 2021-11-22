@@ -1,0 +1,82 @@
+{
+  "name": "tailwind-react-datepicker",
+  "version": "0.0.1",
+  "description": "a datepicker made out of tailwind and react",
+  "author": "Yash Vaghvani",
+  "license": "Apache-2.0",
+  "repository": {
+    "url": "https://github.com/yashvadhvani/tailwind-react-datepicker",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/yashvadhvani/tailwind-react-datepicker",
+    "type": "git"
+  },
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=14.18.1",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint . --fix --ext .js,.ts,.tsx",
+    "format": "./node_modules/.bin/prettier --config .prettierrc 'src/**/*' --write --ignore-unknown",
+    "build": "NODE_ENV=production rollup -c",
+    "start": "rollup -c -w"
+  },
+  "dependencies": {
+    "dayjs": "^1.10.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-transition-group": "^4.4.2"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "dayjs":"1.10.7",
+    "react-transition-group": "^4.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@types/react": "^16.3.13",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-transition-group": "^4.4.4",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "autoprefixer": "9.0.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.3",
+    "babel-runtime": "^6.26.0",
+    "eslint": "^8.0.1",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "postcss": "^7",
+    "prettier": "^2.4.1",
+    "rollup": "^2.60.0",
+    "rollup-plugin-postcss": "3.1.8",
+    "rollup-plugin-typescript2": "^0.31.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "typescript": "^4.1.2"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "typescript",
+    "npm",
+    "datepicker",
+    "date-picker",
+    "daterangepicker",
+    "date-range-picker",
+    "tailwind",
+    "litepie"
+  ]
+}

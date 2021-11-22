@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.litepie-datepicker-overlay::before {
+  content: '';
+  @apply fixed inset-0 hidden transition-opacity duration-200 ease-out bg-black opacity-0;
+}
+.litepie-datepicker-overlay.open::before {
+  @apply block opacity-50;
+}
+.litepie-datepicker::before {
+  --litepie-datepicker: 0px;
+  content: '';
+  @apply absolute top-0 w-4 h-4 bg-white border border-black shadow border-opacity-10 dark:bg-litepie-secondary-800 dark:border-litepie-secondary-700 dark:border-opacity-100;
+  transform: translate(50%, -50%) rotate(-45deg);
+  clip-path: polygon(
+    calc(var(--litepie-datepicker) * -1) calc(var(--litepie-datepicker) * -1),
+    calc(100% + var(--litepie-datepicker)) calc(var(--litepie-datepicker) * -1),
+    calc(100% + var(--litepie-datepicker)) calc(100% + var(--litepie-datepicker))
+  );
+}
+.litepie-datepicker.place-left::before {
+  @apply left-1;
+}
+.litepie-datepicker.place-right::before {
+  @apply right-5;
+}

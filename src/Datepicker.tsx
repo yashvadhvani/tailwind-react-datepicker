@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-nested-ternary */
 import React from 'react';
+import { Property } from 'csstype';
 import duration from 'dayjs/plugin/duration';
 import isBetween from 'dayjs/plugin/isBetween';
 import isToday from 'dayjs/plugin/isToday';
@@ -29,6 +30,17 @@ import LitepieShortcut from './components/Shortcut';
 import datepickerReducer from './reducers/datepicker';
 import panelReducer from './reducers/panel';
 
+interface ISelectionColorProps {
+  ends: {
+    text: Property.Color | undefined;
+    background: Property.Color | undefined;
+  };
+  selection: {
+    text: Property.Color | undefined;
+    background: Property.Color | undefined;
+  };
+}
+
 interface IDatePickerProps {
   overlay: boolean;
   asSingle: boolean;
@@ -43,6 +55,13 @@ interface IDatePickerProps {
   options: any;
   dark: boolean;
   onChange: Function;
+  styles:
+    | {
+        apply?: React.CSSProperties | undefined;
+        cancel?: React.CSSProperties | undefined;
+      }
+    | undefined;
+  selectionColor: ISelectionColorProps;
 }
 
 dayjs.extend(localeData);
@@ -75,6 +94,11 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     },
     dark = false,
     onChange,
+    styles = { apply: undefined, cancel: undefined },
+    selectionColor = {
+      ends: { background: undefined, text: undefined },
+      selection: { background: undefined, text: undefined },
+    },
   } = props;
   const [modelValue, setModelValue] = React.useState([dayjs(), dayjs().add(1, 'M')] as any);
   const LitepieRef = React.useRef(null);
@@ -278,7 +302,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               type: 'multiple',
               payload: {
                 next: prevVal.add(1, 'month'),
-                year: { previous: datepicker.year.previous, next: datepicker.next.year() },
+                year: {
+                  previous: datepicker.year.previous,
+                  next: datepicker.next.year(),
+                },
               },
             });
           }
@@ -457,7 +484,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
             },
           });
           const payload = {
-            year: { previous: datepicker.previous.year(), next: datepicker.year.next },
+            year: {
+              previous: datepicker.previous.year(),
+              next: datepicker.year.next,
+            },
             previous: datepicker.previous,
           };
           if (datepicker.previous.isSame(nextVal, 'month') || datepicker.previous.isAfter(nextVal)) {
@@ -806,9 +836,12 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     return false;
   };
 
-  const datepickerClasses = (date: any) => {
+  const datepickerClasses = (date: any): { class: string; css: React.CSSProperties | undefined } => {
     const { today, active, off, disabled } = date;
-    let classes;
+    let classes: { class: string; css: React.CSSProperties | undefined } = {
+      class: '',
+      css: undefined,
+    };
     let s;
     let e;
     if (asRange()) {
@@ -886,36 +919,72 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     }
     if (active) {
       classes = today
-        ? `text-litepie-primary-500 font-semibold dark:text-litepie-primary-400 rounded-full`
+        ? {
+            class: `text-litepie-primary-500 font-semibold dark:text-litepie-primary-400 rounded-full`,
+            css: selectionColor.ends.text ? { color: selectionColor.ends.text } : undefined,
+          }
         : disabled
-        ? `text-litepie-secondary-600 font-normal disabled:text-litepie-secondary-500 disabled:cursor-not-allowed rounded-full`
+        ? {
+            class: `text-litepie-secondary-600 font-normal disabled:text-litepie-secondary-500 disabled:cursor-not-allowed rounded-full`,
+            css: undefined,
+          }
         : date.isBetween(s, e, 'date', '()')
-        ? `text-litepie-secondary-700 font-medium dark:text-litepie-secondary-100 rounded-full`
-        : `text-litepie-secondary-600 font-medium dark:text-litepie-secondary-200 rounded-full`;
+        ? {
+            class: `text-litepie-secondary-700 font-medium dark:text-litepie-secondary-100 rounded-full`,
+            css: undefined,
+          }
+        : {
+            class: `text-litepie-secondary-600 font-medium dark:text-litepie-secondary-200 rounded-full`,
+            css: undefined,
+          };
     }
     if (off) {
-      classes = `text-litepie-secondary-400 font-light disabled:cursor-not-allowed`;
+      classes = {
+        class: `text-litepie-secondary-400 font-light disabled:cursor-not-allowed`,
+        css: undefined,
+      };
     }
     if (s && e && !off) {
       if (date.isSame(s, 'date')) {
         classes = e.isAfter(s, 'date')
-          ? 'bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed'
-          : 'bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed';
+          ? {
+              class: 'bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed',
+              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+            }
+          : {
+              class: 'bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed',
+              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+            };
         if (s.isSame(e, 'date')) {
-          classes = `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`;
+          classes = {
+            class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
+            css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+          };
         }
       }
       if (date.isSame(e, 'date')) {
         classes = e.isAfter(s, 'date')
-          ? 'bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed'
-          : 'bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed';
+          ? {
+              class: 'bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed',
+              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+            }
+          : {
+              class: 'bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed',
+              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+            };
         if (s.isSame(e, 'date')) {
-          classes = `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`;
+          classes = {
+            class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
+            css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+          };
         }
       }
     } else if (s) {
       if (date.isSame(s, 'date') && !off) {
-        classes = `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`;
+        classes = {
+          class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
+          css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+        };
       }
     }
 
@@ -1227,7 +1296,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           payload: {
             previous: dayjs(startFrom),
             next: dayjs(startFrom).add(1, 'month'),
-            year: { previous: datepicker.previous.year(), next: datepicker.next.year() },
+            year: {
+              previous: datepicker.previous.year(),
+              next: datepicker.next.year(),
+            },
           },
         });
       }
@@ -1267,7 +1339,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           payload: {
             previous: dayjs(startFrom),
             next: dayjs(startFrom).add(1, 'month'),
-            year: { previous: datepicker.previous.year(), next: datepicker.next.year() },
+            year: {
+              previous: datepicker.previous.year(),
+              next: datepicker.next.year(),
+            },
           },
         });
       }
@@ -1308,6 +1383,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         className="flex items-center justify-center flex-none py-3 space-x-2 font-mono text-xs font-semibold leading-6 text-gray-400 transition duration-300 ease-out border border-gray-200 sm:w-auto sm:text-base bg-gray-50 hover:text-gray-900 sm:px-6 rounded-xl sm:space-x-4 focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-gray-300 focus:outline-none"
         onClick={() => setShow(!show)}
       >
+        {}
         <span className="text-gray-900">{pickerValue}</span>
       </button>
 
@@ -1379,6 +1455,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                                   asRange={asRange()}
                                   asPrevOrNext
                                   updateDate={setDate}
+                                  selectionColor={selectionColor.selection}
                                 />
                               </div>
                             )}
@@ -1410,6 +1487,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                                 asRange={asRange()}
                                 asPrevOrNext
                                 updateDate={setDate}
+                                selectionColor={selectionColor.selection}
                               />
                             </div>
                           )}
@@ -1426,6 +1504,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                           type="button"
                           className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white transition duration-300 ease-out border border-transparent rounded-md shadow-sm away-apply-picker bg-litepie-primary-600 hover:bg-litepie-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-litepie-primary-500 sm:ml-3 sm:w-auto sm:text-sm dark:ring-offset-litepie-secondary-800 disabled:cursor-not-allowed"
                           disabled={asSingle ? applyValue.length < 1 : applyValue.length < 2}
+                          style={styles?.apply}
                           onClick={applyDate}
                         >
                           {options.footer.apply}
@@ -1436,6 +1515,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                           onClick={() => {
                             setShow(false);
                           }}
+                          style={styles?.cancel}
                         >
                           {options.footer.cancel}
                         </button>
@@ -1449,6 +1529,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                         <button
                           type="button"
                           className="inline-flex justify-center w-full px-4 py-2 text-base font-medium transition duration-300 ease-out bg-white border rounded-md shadow-sm away-cancel-picker border-litepie-secondary-300 text-litepie-secondary-700 hover:bg-litepie-secondary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-litepie-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:ring-offset-litepie-secondary-800"
+                          style={styles?.cancel}
                         >
                           {options.footer.cancel}
                         </button>

@@ -12,7 +12,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint","prettier"],
+  "plugins": ["react", "@typescript-eslint", "prettier"],
   "settings": {
     "import/resolver": {
       "node": {
@@ -34,7 +34,8 @@
         "tsx": "never"
       }
     ],
-    "prettier/prettier": 2 
+    "import/no-unresolved": [2, { "ignore": ["csstype"] }],
+    "prettier/prettier": 2
   },
   "globals": {
     "React": true,

@@ -1,6 +1,6 @@
 {
   "name": "tailwind-react-datepicker",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "a datepicker made out of tailwind and react",
   "author": "Yash Vaghvani",
   "license": "Apache-2.0",
@@ -20,8 +20,15 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint . --fix --ext .js,.ts,.tsx",
     "format": "./node_modules/.bin/prettier --config .prettierrc 'src/**/*' --write --ignore-unknown",
+    "acp": "git add . && npm run commit && git push",
+    "commit": "git-cz",
+    "lint-format": "npm run lint && npm run format",
     "build": "NODE_ENV=production rollup -c",
-    "start": "rollup -c -w"
+    "publish": "npm run lint-format && npm run build",
+    "start": "rollup -c -w",
+    "semantic-release": "semantic-release",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
   },
   "dependencies": {
     "dayjs": "^1.10.7",
@@ -30,16 +37,23 @@
     "react-transition-group": "^4.4.2"
   },
   "peerDependencies": {
+    "dayjs": "1.10.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "dayjs":"1.10.7",
     "react-transition-group": "^4.4.2"
   },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "10 KB"
+    }
+  ],
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
     "@rollup/plugin-babel": "^5.3.0",
+    "@size-limit/preset-small-lib": "^7.0.3",
     "@types/react": "^16.3.13",
     "@types/react-dom": "^16.0.5",
     "@types/react-transition-group": "^4.4.4",
@@ -62,7 +76,9 @@
     "rollup": "^2.60.0",
     "rollup-plugin-postcss": "3.1.8",
     "rollup-plugin-typescript2": "^0.31.0",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
+    "semantic-release": "^18.0.0",
+    "size-limit": "^7.0.3",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@2.2.17",
     "typescript": "^4.1.2"
   },
   "files": [

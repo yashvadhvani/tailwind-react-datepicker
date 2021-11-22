@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
 /* eslint-disable no-nested-ternary */
-import React from 'react';
-import { Property } from 'csstype';
-import duration from 'dayjs/plugin/duration';
-import isBetween from 'dayjs/plugin/isBetween';
-import isToday from 'dayjs/plugin/isToday';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import localeData from 'dayjs/plugin/localeData';
-import dayjs from 'dayjs';
-import { CSSTransition } from 'react-transition-group';
-import './datepicker.css';
+import React from "react";
+import { Property } from "csstype";
+import duration from "dayjs/plugin/duration";
+import isBetween from "dayjs/plugin/isBetween";
+import isToday from "dayjs/plugin/isToday";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import localeData from "dayjs/plugin/localeData";
+import dayjs from "dayjs";
+import { CSSTransition } from "react-transition-group";
+import "./datepicker.css";
 import {
   useCurrentDate,
   useDisableDate,
@@ -20,15 +20,15 @@ import {
   useToValueFromArray,
   useToValueFromString,
   useVisibleViewport,
-} from './lib/fn';
-import LitepieHeader from './components/Header';
-import LitepieMonth from './components/Month';
-import LitepieWeek from './components/Week';
-import LitepieYear from './components/Year';
-import LitepieCalendar from './components/Calendar';
-import LitepieShortcut from './components/Shortcut';
-import datepickerReducer from './reducers/datepicker';
-import panelReducer from './reducers/panel';
+} from "./lib/fn";
+import LitepieHeader from "./components/Header";
+import LitepieMonth from "./components/Month";
+import LitepieWeek from "./components/Week";
+import LitepieYear from "./components/Year";
+import LitepieCalendar from "./components/Calendar";
+import LitepieShortcut from "./components/Shortcut";
+import datepickerReducer from "./reducers/datepicker";
+import panelReducer from "./reducers/panel";
 
 interface ISelectionColorProps {
   ends: {
@@ -62,6 +62,11 @@ interface IDatePickerProps {
       }
     | undefined;
   selectionColor: ISelectionColorProps;
+  CalenderIcon: JSX.Element | undefined;
+  HeaderIcons: {
+    Prev: JSX.Element | undefined;
+    Next: JSX.Element | undefined;
+  };
 }
 
 dayjs.extend(localeData);
@@ -71,7 +76,9 @@ dayjs.extend(isToday);
 dayjs.extend(isBetween);
 dayjs.extend(duration);
 
-const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePickerProps) => {
+const Datepicker: React.FunctionComponent<IDatePickerProps> = (
+  props: IDatePickerProps
+) => {
   const {
     overlay = true,
     asSingle = false,
@@ -81,15 +88,15 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     autoApply = false,
     shortcuts = true,
     formatter = {
-      date: 'YYYY-MMM-DD',
-      month: 'MMM',
+      date: "YYYY-MMM-DD",
+      month: "MMM",
     },
     separator = ` ~ `,
     startFrom,
     options = {
       footer: {
-        apply: 'apply',
-        cancel: 'cancel',
+        apply: "apply",
+        cancel: "cancel",
       },
     },
     dark = false,
@@ -99,15 +106,23 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       ends: { background: undefined, text: undefined },
       selection: { background: undefined, text: undefined },
     },
+    HeaderIcons = {
+      Prev: undefined,
+      Next: undefined,
+    },
+    CalenderIcon = undefined,
   } = props;
-  const [modelValue, setModelValue] = React.useState([dayjs(), dayjs().add(1, 'M')] as any);
+  const [modelValue, setModelValue] = React.useState([
+    dayjs(),
+    dayjs().add(1, "M"),
+  ] as any);
   const LitepieRef = React.useRef(null);
   const Litepiedatepicker = React.useRef(null);
   const LitepieButtonRef = React.useRef(null);
   const [show, setShow] = React.useState(false);
   const [placement, setPlacement] = React.useState(true);
   const [selection, setSelection] = React.useState(null);
-  const [pickerValue, setPickerValue] = React.useState('');
+  const [pickerValue, setPickerValue] = React.useState("");
   const [hoverValue, setHoverValue] = React.useState([]);
   const [applyValue, setApplyValue] = React.useState([] as any);
   const [previous, setPrevious] = React.useState(null);
@@ -125,20 +140,20 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
   });
   const [datepicker, datePickerDispatch] = React.useReducer(datepickerReducer, {
     previous: dayjs(),
-    next: dayjs().add(1, 'month'),
+    next: dayjs().add(1, "month"),
     year: {
       previous: dayjs().year(),
       next: dayjs().year(),
     },
     weeks: dayjs.weekdaysShort(),
-    months: formatter.month === 'MMM' ? dayjs.monthsShort() : dayjs.months(),
+    months: formatter.month === "MMM" ? dayjs.monthsShort() : dayjs.months(),
   });
   const weeks = () => datepicker.weeks;
   const months = () => datepicker.months;
-  const useObject = () => typeof modelValue === 'object';
+  const useObject = () => typeof modelValue === "object";
   const inRangeDate = (date: any) => {
     if (disableInRange) return false;
-    if (pickerValue === '') return false;
+    if (pickerValue === "") return false;
     let s;
     let e;
     if (Array.isArray(modelValue)) {
@@ -151,13 +166,18 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         s = start;
         e = end;
       }
-    } else if (typeof modelValue === 'string') {
+    } else if (typeof modelValue === "string") {
       const [start, end] = modelValue.split(separator);
       s = start;
       e = end;
     }
 
-    return date.isBetween(dayjs(s, formatter.date, true), dayjs(e, formatter.date, true), 'date', '[]');
+    return date.isBetween(
+      dayjs(s, formatter.date, true),
+      dayjs(e, formatter.date, true),
+      "date",
+      "[]"
+    );
   };
   const asRange = () => {
     if (!useRange && !asSingle) {
@@ -184,7 +204,8 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               value.active = datepicker.previous.month() === v.month();
               value.off = datepicker.previous.month() !== v.month();
               value.sunday = v.day() === 0;
-              value.disabled = useDisableDate(v, { disableDate }) && !inRangeDate(v);
+              value.disabled =
+                useDisableDate(v, { disableDate }) && !inRangeDate(v);
               value.inRange = () => {
                 if (asSingle && !useRange) {
                   return datepicker.previous.month() !== v.month();
@@ -195,8 +216,13 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                 if (!asRange()) return false;
                 if (hoverValue.length > 1) {
                   return (
-                    (v.isBetween(hoverValue[0], hoverValue[1], 'date', '()') ||
-                      v.isBetween(hoverValue[1], hoverValue[0], 'date', '()')) &&
+                    (v.isBetween(hoverValue[0], hoverValue[1], "date", "()") ||
+                      v.isBetween(
+                        hoverValue[1],
+                        hoverValue[0],
+                        "date",
+                        "()"
+                      )) &&
                     datepicker.previous.month() === v.month()
                   );
                 }
@@ -205,8 +231,14 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               value.duration = () => false;
               return value;
             }),
-        month: datepicker.previous && datepicker.previous.format && datepicker.previous.format(formatter.month),
-        year: datepicker.previous && datepicker.previous.year && datepicker.previous.year(),
+        month:
+          datepicker.previous &&
+          datepicker.previous.format &&
+          datepicker.previous.format(formatter.month),
+        year:
+          datepicker.previous &&
+          datepicker.previous.year &&
+          datepicker.previous.year(),
         years: () =>
           Array.from(
             {
@@ -217,58 +249,58 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                 return datepicker.year.previous + k;
               }
               return datepicker.year.previous + k;
-            },
+            }
           ),
         onPrevious: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'previous',
-              value: datepicker.previous.subtract(1, 'month'),
+              key: "previous",
+              value: datepicker.previous.subtract(1, "month"),
             },
           });
         },
         onNext: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'previous',
-              value: datepicker.previous.add(1, 'month'),
+              key: "previous",
+              value: datepicker.previous.add(1, "month"),
             },
           });
-          if (datepicker.previous.diff(datepicker.next, 'month') === -1) {
+          if (datepicker.previous.diff(datepicker.next, "month") === -1) {
             datePickerDispatch({
-              type: 'change',
+              type: "change",
               payload: {
-                key: 'next',
-                value: datepicker.next.add(1, 'month'),
+                key: "next",
+                value: datepicker.next.add(1, "month"),
               },
             });
           }
         },
         onPreviousYear: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'year',
+              key: "year",
               value: { previous: datepicker.year.previous - 12 },
             },
           });
         },
         onNextYear: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'year',
+              key: "year",
               value: { previous: datepicker.year.previous + 12 },
             },
           });
         },
         openMonth: () => {
           panelDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'previous',
+              key: "previous",
               value: {
                 month: !panel.previous.month,
                 year: false,
@@ -280,16 +312,16 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         setMonth: (event: any) => {
           const prevVal = datepicker.previous.month(event);
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'previous',
+              key: "previous",
               value: prevVal,
             },
           });
           panelDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'previous',
+              key: "previous",
               value: {
                 month: !panel.previous.month,
                 year: false,
@@ -297,11 +329,14 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               },
             },
           });
-          if (datepicker.next.isSame(prevVal, 'month') || datepicker.next.isBefore(prevVal)) {
+          if (
+            datepicker.next.isSame(prevVal, "month") ||
+            datepicker.next.isBefore(prevVal)
+          ) {
             datePickerDispatch({
-              type: 'multiple',
+              type: "multiple",
               payload: {
-                next: prevVal.add(1, 'month'),
+                next: prevVal.add(1, "month"),
                 year: {
                   previous: datepicker.year.previous,
                   next: datepicker.next.year(),
@@ -312,9 +347,9 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         },
         openYear: () => {
           panelDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'previous',
+              key: "previous",
               value: {
                 year: !panel.previous.year,
                 month: false,
@@ -327,16 +362,16 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           const prevVal = datepicker.previous.year(event);
           if (!asNext) {
             datePickerDispatch({
-              type: 'change',
+              type: "change",
               payload: {
-                key: 'previous',
+                key: "previous",
                 value: prevVal,
               },
             });
             panelDispatch({
-              type: 'change',
+              type: "change",
               payload: {
-                key: 'previous',
+                key: "previous",
                 value: {
                   year: !panel.previous.year,
                   calendar: panel.previous.year,
@@ -349,11 +384,14 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                 next: datepicker.next.year(),
               },
             };
-            if (datepicker.next.isSame(prevVal, 'month') || datepicker.next.isBefore(prevVal)) {
-              payload.next = prevVal.add(1, 'month');
+            if (
+              datepicker.next.isSame(prevVal, "month") ||
+              datepicker.next.isBefore(prevVal)
+            ) {
+              payload.next = prevVal.add(1, "month");
             }
             datePickerDispatch({
-              type: 'multiple',
+              type: "multiple",
               payload,
             });
           }
@@ -370,7 +408,8 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               value.active = datepicker.next.month() === v.month();
               value.off = datepicker.next.month() !== v.month();
               value.sunday = v.day() === 0;
-              value.disabled = useDisableDate(v, { disableDate }) && !inRangeDate(v);
+              value.disabled =
+                useDisableDate(v, { disableDate }) && !inRangeDate(v);
               value.inRange = () => {
                 if (asSingle && !useRange) {
                   return datepicker.next.month() !== v.month();
@@ -380,8 +419,13 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               value.hovered = () => {
                 if (hoverValue.length > 1) {
                   return (
-                    (v.isBetween(hoverValue[0], hoverValue[1], 'date', '()') ||
-                      v.isBetween(hoverValue[1], hoverValue[0], 'date', '()')) &&
+                    (v.isBetween(hoverValue[0], hoverValue[1], "date", "()") ||
+                      v.isBetween(
+                        hoverValue[1],
+                        hoverValue[0],
+                        "date",
+                        "()"
+                      )) &&
                     datepicker.next.month() === v.month()
                   );
                 }
@@ -403,58 +447,58 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                 return datepicker.year.next + k;
               }
               return datepicker.year.next + k;
-            },
+            }
           ),
         onPrevious: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'next',
-              value: datepicker.next.subtract(1, 'month'),
+              key: "next",
+              value: datepicker.next.subtract(1, "month"),
             },
           });
-          if (datepicker.next.diff(datepicker.previous, 'month') === 1) {
+          if (datepicker.next.diff(datepicker.previous, "month") === 1) {
             datePickerDispatch({
-              type: 'change',
+              type: "change",
               payload: {
-                key: 'previous',
-                value: datepicker.previous.subtract(1, 'month'),
+                key: "previous",
+                value: datepicker.previous.subtract(1, "month"),
               },
             });
           }
         },
         onNext: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'next',
-              value: datepicker.next.add(1, 'month'),
+              key: "next",
+              value: datepicker.next.add(1, "month"),
             },
           });
         },
         onPreviousYear: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'year',
+              key: "year",
               value: { next: datepicker.year.next - 12 },
             },
           });
         },
         onNextYear: () => {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'year',
+              key: "year",
               value: { next: datepicker.year.next + 12 },
             },
           });
         },
         openMonth: () => {
           panelDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'next',
+              key: "next",
               value: {
                 month: !panel.next.month,
                 year: false,
@@ -466,16 +510,16 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         setMonth: (event: any) => {
           const nextVal = datepicker.next.month(event);
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'next',
+              key: "next",
               value: nextVal,
             },
           });
           panelDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'next',
+              key: "next",
               value: {
                 month: !panel.next.month,
                 year: false,
@@ -490,19 +534,22 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
             },
             previous: datepicker.previous,
           };
-          if (datepicker.previous.isSame(nextVal, 'month') || datepicker.previous.isAfter(nextVal)) {
-            payload.previous = nextVal.subtract(1, 'month');
+          if (
+            datepicker.previous.isSame(nextVal, "month") ||
+            datepicker.previous.isAfter(nextVal)
+          ) {
+            payload.previous = nextVal.subtract(1, "month");
           }
           datePickerDispatch({
-            type: 'multiple',
+            type: "multiple",
             payload,
           });
         },
         openYear: () => {
           panelDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'next',
+              key: "next",
               value: {
                 year: !panel.next.year,
                 month: false,
@@ -515,16 +562,16 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           if (asNext) {
             const nextVal = datepicker.next.year(event);
             datePickerDispatch({
-              type: 'change',
+              type: "change",
               payload: {
-                key: 'next',
+                key: "next",
                 value: nextVal,
               },
             });
             panelDispatch({
-              type: 'change',
+              type: "change",
               payload: {
-                key: 'next',
+                key: "next",
                 value: {
                   year: !panel.next.year,
                   month: false,
@@ -538,18 +585,21 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                 next: nextVal.year(),
               },
             };
-            if (datepicker.previous.isSame(nextVal, 'month') || datepicker.previous.isAfter(nextVal)) {
-              payload.previous = nextVal.subtract(1, 'month');
+            if (
+              datepicker.previous.isSame(nextVal, "month") ||
+              datepicker.previous.isAfter(nextVal)
+            ) {
+              payload.previous = nextVal.subtract(1, "month");
             }
             datePickerDispatch({
-              type: 'multiple',
+              type: "multiple",
               payload,
             });
           }
         },
       },
     }),
-    [datepicker, panel],
+    [datepicker, panel]
   );
   const force = () => {
     setPrevious(null);
@@ -568,8 +618,8 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                   previous: date,
                   next: previous,
                 },
-                { formatter, separator },
-              ),
+                { formatter, separator }
+              )
             );
           } else {
             setPickerValue(
@@ -578,8 +628,8 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                   previous,
                   next: date,
                 },
-                { formatter, separator },
-              ),
+                { formatter, separator }
+              )
             );
           }
           const [s, e] = pickerValue.split(separator);
@@ -602,15 +652,20 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                   previous: dayjs(s, formatter.date, true),
                   next: dayjs(e, formatter.date, true),
                 },
-                { formatter, separator },
-              ),
+                { formatter, separator }
+              )
             );
           }
           setShow(false);
           setApplyValue([]);
-          if (!dayjs(s, formatter.date, true).isSame(dayjs(e, formatter.date, true), 'month')) {
+          if (
+            !dayjs(s, formatter.date, true).isSame(
+              dayjs(e, formatter.date, true),
+              "month"
+            )
+          ) {
             datePickerDispatch({
-              type: 'multiple',
+              type: "multiple",
               payload: {
                 previous: dayjs(s, formatter.date, true),
                 next: dayjs(e, formatter.date, true),
@@ -620,7 +675,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           force();
         } else {
           let tempApplyValue = applyValue;
-          if ((previous as any).isAfter(date, 'month')) {
+          if ((previous as any).isAfter(date, "month")) {
             tempApplyValue = [date, previous];
             setApplyValue(tempApplyValue);
           } else {
@@ -629,9 +684,9 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           }
           const [s, e] = tempApplyValue as any;
 
-          if (!s.isSame(e, 'month')) {
+          if (!s.isSame(e, "month")) {
             datePickerDispatch({
-              type: 'multiple',
+              type: "multiple",
               payload: {
                 previous: s,
                 next: e,
@@ -649,35 +704,35 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
 
         if (asNext) {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'next',
+              key: "next",
               value: date,
             },
           });
-          if (datepicker.previous.isSame(date, 'month')) {
+          if (datepicker.previous.isSame(date, "month")) {
             datePickerDispatch({
-              type: 'change',
+              type: "change",
               payload: {
-                key: 'next',
-                value: date.add(1, 'month'),
+                key: "next",
+                value: date.add(1, "month"),
               },
             });
           }
         } else {
           datePickerDispatch({
-            type: 'change',
+            type: "change",
             payload: {
-              key: 'previous',
+              key: "previous",
               value: date,
             },
           });
-          if (datepicker.next.isSame(date, 'month')) {
+          if (datepicker.next.isSame(date, "month")) {
             datePickerDispatch({
-              type: 'multiple',
+              type: "multiple",
               payload: {
                 previous: datepicker.next,
-                next: date.add(1, 'month'),
+                next: date.add(1, "month"),
               },
             });
           }
@@ -717,7 +772,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
             previous: e,
             next: s,
           },
-          { formatter, separator },
+          { formatter, separator }
         );
       } else {
         date = useToValueFromArray(
@@ -725,7 +780,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
             previous: s,
             next: e,
           },
-          { formatter, separator },
+          { formatter, separator }
         );
       }
     } else {
@@ -753,8 +808,8 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               previous: dayjs(s, formatter.date, true),
               next: dayjs(e, formatter.date, true),
             },
-            { formatter, separator },
-          ),
+            { formatter, separator }
+          )
         );
       }
       setPickerValue(date);
@@ -818,7 +873,9 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       }
     } else if (autoApply) {
       const [start, end] = (
-        modelValue && typeof modelValue === 'string' ? modelValue.split(separator) : [false, false]
+        modelValue && typeof modelValue === "string"
+          ? modelValue.split(separator)
+          : [false, false]
       ) as any;
       s = start && dayjs(start, formatter.date, true);
       e = end && dayjs(end, formatter.date, true);
@@ -836,10 +893,12 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     return false;
   };
 
-  const datepickerClasses = (date: any): { class: string; css: React.CSSProperties | undefined } => {
+  const datepickerClasses = (
+    date: any
+  ): { class: string; css: React.CSSProperties | undefined } => {
     const { today, active, off, disabled } = date;
     let classes: { class: string; css: React.CSSProperties | undefined } = {
-      class: '',
+      class: "",
       css: undefined,
     };
     let s;
@@ -865,7 +924,9 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           s = start && dayjs(start, formatter.date, true);
           e = end && dayjs(end, formatter.date, true);
         } else if (autoApply) {
-          const [start, end] = modelValue ? Object.values(modelValue) : [false, false];
+          const [start, end] = modelValue
+            ? Object.values(modelValue)
+            : [false, false];
           s = start && dayjs(start, formatter.date, true);
           e = end && dayjs(end, formatter.date, true);
         } else {
@@ -879,7 +940,9 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         e = end && dayjs(end, formatter.date, true);
       } else if (autoApply) {
         const [start, end] = (
-          modelValue && typeof modelValue === 'string' ? modelValue.split(separator) : [false, false]
+          modelValue && typeof modelValue === "string"
+            ? modelValue.split(separator)
+            : [false, false]
         ) as any;
         s = start && dayjs(start, formatter.date, true);
         e = end && dayjs(end, formatter.date, true);
@@ -909,7 +972,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         s = start && dayjs(start, formatter.date, true);
       }
     } else if (autoApply) {
-      if (modelValue && typeof modelValue === 'string') {
+      if (modelValue && typeof modelValue === "string") {
         const [start] = modelValue.split(separator);
         s = dayjs(start, formatter.date, true);
       }
@@ -921,14 +984,16 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       classes = today
         ? {
             class: `text-litepie-primary-500 font-semibold dark:text-litepie-primary-400 rounded-full`,
-            css: selectionColor.ends.text ? { color: selectionColor.ends.text } : undefined,
+            css: selectionColor.ends.text
+              ? { color: selectionColor.ends.text }
+              : undefined,
           }
         : disabled
         ? {
             class: `text-litepie-secondary-600 font-normal disabled:text-litepie-secondary-500 disabled:cursor-not-allowed rounded-full`,
             css: undefined,
           }
-        : date.isBetween(s, e, 'date', '()')
+        : date.isBetween(s, e, "date", "()")
         ? {
             class: `text-litepie-secondary-700 font-medium dark:text-litepie-secondary-100 rounded-full`,
             css: undefined,
@@ -945,45 +1010,63 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       };
     }
     if (s && e && !off) {
-      if (date.isSame(s, 'date')) {
-        classes = e.isAfter(s, 'date')
+      if (date.isSame(s, "date")) {
+        classes = e.isAfter(s, "date")
           ? {
-              class: 'bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed',
-              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+              class:
+                "bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed",
+              css: selectionColor.ends.background
+                ? { backgroundColor: selectionColor.ends.background }
+                : undefined,
             }
           : {
-              class: 'bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed',
-              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+              class:
+                "bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed",
+              css: selectionColor.ends.background
+                ? { backgroundColor: selectionColor.ends.background }
+                : undefined,
             };
-        if (s.isSame(e, 'date')) {
+        if (s.isSame(e, "date")) {
           classes = {
             class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
-            css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+            css: selectionColor.ends.background
+              ? { backgroundColor: selectionColor.ends.background }
+              : undefined,
           };
         }
       }
-      if (date.isSame(e, 'date')) {
-        classes = e.isAfter(s, 'date')
+      if (date.isSame(e, "date")) {
+        classes = e.isAfter(s, "date")
           ? {
-              class: 'bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed',
-              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+              class:
+                "bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed",
+              css: selectionColor.ends.background
+                ? { backgroundColor: selectionColor.ends.background }
+                : undefined,
             }
           : {
-              class: 'bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed',
-              css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+              class:
+                "bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed",
+              css: selectionColor.ends.background
+                ? { backgroundColor: selectionColor.ends.background }
+                : undefined,
             };
-        if (s.isSame(e, 'date')) {
+        if (s.isSame(e, "date")) {
           classes = {
             class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
-            css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+            css: selectionColor.ends.background
+              ? { backgroundColor: selectionColor.ends.background }
+              : undefined,
           };
         }
       }
     } else if (s) {
-      if (date.isSame(s, 'date') && !off) {
+      if (date.isSame(s, "date") && !off) {
         classes = {
           class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
-          css: selectionColor.ends.background ? { backgroundColor: selectionColor.ends.background } : undefined,
+          css: selectionColor.ends.background
+            ? { backgroundColor: selectionColor.ends.background }
+            : undefined,
         };
       }
     }
@@ -995,7 +1078,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     let classes;
     let s;
     let e;
-    classes = '';
+    classes = "";
     if (!asRange()) return classes;
     if (Array.isArray(modelValue)) {
       if (hoverValue.length > 1) {
@@ -1033,7 +1116,9 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       e = end && dayjs(end, formatter.date, true);
     } else if (autoApply) {
       const [start, end] = (
-        modelValue && typeof modelValue === 'string' ? modelValue.split(separator) : [false, false]
+        modelValue && typeof modelValue === "string"
+          ? modelValue.split(separator)
+          : [false, false]
       ) as any;
       s = start && dayjs(start, formatter.date, true);
       e = end && dayjs(end, formatter.date, true);
@@ -1044,14 +1129,14 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     }
 
     if (s && e) {
-      if (date.isSame(s, 'date')) {
+      if (date.isSame(s, "date")) {
         if (e.isBefore(s)) {
           classes += ` rounded-r-full inset-0`;
         }
         if (s.isBefore(e)) {
           classes += ` rounded-l-full inset-0`;
         }
-      } else if (date.isSame(e, 'date')) {
+      } else if (date.isSame(e, "date")) {
         if (e.isBefore(s)) {
           classes += ` rounded-l-full inset-0`;
         }
@@ -1069,7 +1154,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     let prevVal = dayjs(s, formatter.date, true);
     let nextVal = dayjs(e, formatter.date, true);
     datePickerDispatch({
-      type: 'multiple',
+      type: "multiple",
       payload: {
         previous: prevVal,
         next: nextVal,
@@ -1077,23 +1162,24 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     });
     if (
       dayjs.duration(nextVal.diff(prevVal)).months() === 2 ||
-      (dayjs.duration(nextVal.diff(prevVal)).months() === 1 && dayjs.duration(nextVal.diff(prevVal)).days() === 7)
+      (dayjs.duration(nextVal.diff(prevVal)).months() === 1 &&
+        dayjs.duration(nextVal.diff(prevVal)).days() === 7)
     ) {
-      nextVal = nextVal.subtract(1, 'month');
+      nextVal = nextVal.subtract(1, "month");
       datePickerDispatch({
-        type: 'change',
+        type: "change",
         payload: {
-          key: 'next',
+          key: "next",
           value: nextVal,
         },
       });
     }
-    if (nextVal.isSame(prevVal, 'month') || nextVal.isBefore(prevVal)) {
-      prevVal = prevVal.add(1, 'month');
+    if (nextVal.isSame(prevVal, "month") || nextVal.isBefore(prevVal)) {
+      prevVal = prevVal.add(1, "month");
       datePickerDispatch({
-        type: 'change',
+        type: "change",
         payload: {
-          key: 'next',
+          key: "next",
           value: prevVal,
         },
       });
@@ -1118,13 +1204,16 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                 previous: s,
                 next: e,
               },
-              { formatter, separator },
-            ),
+              { formatter, separator }
+            )
           );
         }
         setPickerValue(`${s}${separator}${e}`);
       } else {
-        setApplyValue([dayjs(s, formatter.date, true) as never, dayjs(e, formatter.date, true) as never]);
+        setApplyValue([
+          dayjs(s, formatter.date, true) as never,
+          dayjs(e, formatter.date, true) as never,
+        ]);
       }
     } else if (autoApply) {
       if (Array.isArray(modelValue)) {
@@ -1139,7 +1228,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       }
       setPickerValue(s);
     } else {
-      setApplyValue([dayjs(s, formatter.date, true) as never, dayjs(e, formatter.date, true) as never]);
+      setApplyValue([
+        dayjs(s, formatter.date, true) as never,
+        dayjs(e, formatter.date, true) as never,
+      ]);
     }
     forceEmit(s, e);
   };
@@ -1152,15 +1244,15 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
   };
 
   const setToYesterday = () => {
-    const s = dayjs().subtract(1, 'day').format(formatter.date);
-    const e = dayjs().subtract(1, 'day').format(formatter.date);
+    const s = dayjs().subtract(1, "day").format(formatter.date);
+    const e = dayjs().subtract(1, "day").format(formatter.date);
 
     emitShortcut(s, e);
   };
 
   const setToLastDay = (day: number) => {
     const s = dayjs()
-      .subtract(day - 1, 'day')
+      .subtract(day - 1, "day")
       .format(formatter.date);
     const e = dayjs().format(formatter.date);
 
@@ -1175,7 +1267,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
   };
 
   const setToLastMonth = () => {
-    const s = dayjs().date(1).subtract(1, 'month').format(formatter.date);
+    const s = dayjs().date(1).subtract(1, "month").format(formatter.date);
     const e = dayjs().date(0).format(formatter.date);
 
     emitShortcut(s, e);
@@ -1188,7 +1280,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
   React.useEffect(() => {
     if (applyValue.length > 0) {
       panelDispatch({
-        type: 'multiple',
+        type: "multiple",
         payload: {
           previous: {
             year: false,
@@ -1223,18 +1315,18 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
             console.log(Object.keys(modelValue));
           } catch (error: any) {
             console.warn(
-              '[Litepie Datepicker]: It looks like you want to use Object as the argument %cv-model',
-              'font-style: italic; color: #42b883;',
-              ', but you pass it undefined or null.',
+              "[Litepie Datepicker]: It looks like you want to use Object as the argument %cv-model",
+              "font-style: italic; color: #42b883;",
+              ", but you pass it undefined or null."
             );
             console.warn(
               `[Litepie Datepicker]: We has replace with %c{ startDate: '', endDate: '' }`,
-              'font-style: italic; color: #42b883;',
-              ', but you can replace manually.',
+              "font-style: italic; color: #42b883;",
+              ", but you can replace manually."
             );
             setModelValue({
-              startDate: '',
-              endDate: '',
+              startDate: "",
+              endDate: "",
             });
           }
         }
@@ -1256,30 +1348,30 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
               previous: s,
               next: e,
             },
-            { formatter, separator },
-          ),
+            { formatter, separator }
+          )
         );
-        if (e.isBefore(s, 'month')) {
+        if (e.isBefore(s, "month")) {
           datePickerDispatch({
-            type: 'multiple',
+            type: "multiple",
             payload: {
               previous: e,
               next: s,
               year: { previous: e.year(), next: s.year() },
             },
           });
-        } else if (e.isSame(s, 'month')) {
+        } else if (e.isSame(s, "month")) {
           datePickerDispatch({
-            type: 'multiple',
+            type: "multiple",
             payload: {
               previous: s,
-              next: e.add(1, 'month'),
-              year: { previous: s.year(), next: s.add(1, 'year').year() },
+              next: e.add(1, "month"),
+              year: { previous: s.year(), next: s.add(1, "year").year() },
             },
           });
         } else {
           datePickerDispatch({
-            type: 'multiple',
+            type: "multiple",
             payload: {
               previous: s,
               next: e,
@@ -1292,10 +1384,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         }
       } else {
         datePickerDispatch({
-          type: 'multiple',
+          type: "multiple",
           payload: {
             previous: dayjs(startFrom),
-            next: dayjs(startFrom).add(1, 'month'),
+            next: dayjs(startFrom).add(1, "month"),
             year: {
               previous: datepicker.previous.year(),
               next: datepicker.next.year(),
@@ -1322,11 +1414,11 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       if (s && s.isValid()) {
         setPickerValue(useToValueFromString(s, { formatter }));
         datePickerDispatch({
-          type: 'multiple',
+          type: "multiple",
           payload: {
             previous: s,
-            next: s.add(1, 'month'),
-            year: { previous: s.year(), next: s.add(1, 'year').year() },
+            next: s.add(1, "month"),
+            year: { previous: s.year(), next: s.add(1, "year").year() },
           },
         });
 
@@ -1335,10 +1427,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         }
       } else {
         datePickerDispatch({
-          type: 'multiple',
+          type: "multiple",
           payload: {
             previous: dayjs(startFrom),
-            next: dayjs(startFrom).add(1, 'month'),
+            next: dayjs(startFrom).add(1, "month"),
             year: {
               previous: datepicker.previous.year(),
               next: datepicker.next.year(),
@@ -1348,14 +1440,15 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       }
     }
     datePickerDispatch({
-      type: 'multiple',
+      type: "multiple",
       payload: {
         weeks: dayjs.weekdaysShort(),
-        months: formatter.month === 'MMM' ? dayjs.monthsShort() : dayjs.months(),
+        months:
+          formatter.month === "MMM" ? dayjs.monthsShort() : dayjs.months(),
       },
     });
     document.addEventListener(
-      'click',
+      "click",
       (event) => {
         if (
           Litepiedatepicker &&
@@ -1365,7 +1458,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
           setShow(false);
         }
       },
-      true,
+      true
     );
   }, []);
 
@@ -1373,9 +1466,9 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
     <div
       id="litepie"
       ref={Litepiedatepicker}
-      className={`${dark ? 'dark ' : ''}relative ${overlay ? ' litepie-datepicker-overlay' : ''}${
-        show && overlay ? ' open' : ''
-      }`}
+      className={`${dark ? "dark " : ""}relative ${
+        overlay ? " litepie-datepicker-overlay" : ""
+      }${show && overlay ? " open" : ""}`}
     >
       <button
         ref={LitepieButtonRef}
@@ -1383,7 +1476,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         className="flex items-center justify-center flex-none py-3 space-x-2 font-mono text-xs font-semibold leading-6 text-gray-400 transition duration-300 ease-out border border-gray-200 sm:w-auto sm:text-base bg-gray-50 hover:text-gray-900 sm:px-6 rounded-xl sm:space-x-4 focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-gray-300 focus:outline-none"
         onClick={() => setShow(!show)}
       >
-        {}
+        {CalenderIcon}
         <span className="text-gray-900">{pickerValue}</span>
       </button>
 
@@ -1391,22 +1484,24 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
         <CSSTransition
           timeout={5000}
           classnames={{
-            enter: 'translate-y-3 opacity-0',
-            enterDone: 'translate-y-0 opacity-100',
-            enterActive: 'transition duration-200 ease-out transform',
-            exit: 'transition duration-150 ease-in transform',
-            exitDone: 'translate-y-0 opacity-100',
-            exitActive: 'translate-y-3 opacity-0',
+            enter: "translate-y-3 opacity-0",
+            enterDone: "translate-y-0 opacity-100",
+            enterActive: "transition duration-200 ease-out transform",
+            exit: "transition duration-150 ease-in transform",
+            exitDone: "translate-y-0 opacity-100",
+            exitActive: "translate-y-3 opacity-0",
           }}
         >
           <div
             ref={LitepieRef}
-            className={`absolute z-50 top-full sm:mt-2.5 ${placement ? 'left-0 right-auto' : 'left-auto right-0'}`}
+            className={`absolute z-50 top-full sm:mt-2.5 ${
+              placement ? "left-0 right-auto" : "left-auto right-0"
+            }`}
           >
             <div className="fixed inset-0 z-50 overflow-y-auto bg-white shadow-sm sm:overflow-visible sm:static sm:z-auto dark:bg-litepie-secondary-800 sm:rounded-lg">
               <div
                 className={`litepie-datepicker static sm:relative w-full bg-white sm:rounded-lg sm:shadow-sm border-0 sm:border border-black border-opacity-10 px-3 py-3 sm:px-1 sm:py-1.5 dark:bg-litepie-secondary-800 dark:border-litepie-secondary-700 dark:border-opacity-100 ${
-                  placement ? 'place-left' : 'place-right'
+                  placement ? "place-left" : "place-right"
                 }`}
               >
                 <div className="flex flex-wrap lg:flex-nowrap">
@@ -1429,12 +1524,23 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                         </div>
 
                         <div
-                          className={`relative w-full sm:w-80${asRange() && !asSingle ? ' mb-3 sm:mb-0 sm:mr-2' : ''}`}
+                          className={`relative w-full sm:w-80${
+                            asRange() && !asSingle
+                              ? " mb-3 sm:mb-0 sm:mr-2"
+                              : ""
+                          }`}
                         >
-                          <LitepieHeader panel={panel.previous} calendar={calendar.previous} />
+                          <LitepieHeader
+                            panel={panel.previous}
+                            calendar={calendar.previous}
+                            Icons={HeaderIcons}
+                          />
                           <div className="px-0.5 sm:px-2">
                             {panel.previous.month && (
-                              <LitepieMonth months={months()} updateMonth={calendar.previous.setMonth} />
+                              <LitepieMonth
+                                months={months()}
+                                updateMonth={calendar.previous.setMonth}
+                              />
                             )}
                             {panel.previous.year && (
                               <LitepieYear
@@ -1465,9 +1571,18 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                     )}
                     {asRange() && !asSingle && (
                       <div className="relative w-full mt-3 overflow-hidden sm:w-80 sm:mt-0 sm:ml-2">
-                        <LitepieHeader panel={panel.next} calendar={calendar.next} />
+                        <LitepieHeader
+                          panel={panel.next}
+                          calendar={calendar.next}
+                          Icons={HeaderIcons}
+                        />
                         <div className="px-0.5 sm:px-2">
-                          {panel.next.month && <LitepieMonth months={months()} updateMonth={calendar.next.setMonth} />}
+                          {panel.next.month && (
+                            <LitepieMonth
+                              months={months()}
+                              updateMonth={calendar.next.setMonth}
+                            />
+                          )}
                           {panel.next.year && (
                             <LitepieYear
                               years={calendar.next.years()}
@@ -1503,7 +1618,11 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                         <button
                           type="button"
                           className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white transition duration-300 ease-out border border-transparent rounded-md shadow-sm away-apply-picker bg-litepie-primary-600 hover:bg-litepie-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-litepie-primary-500 sm:ml-3 sm:w-auto sm:text-sm dark:ring-offset-litepie-secondary-800 disabled:cursor-not-allowed"
-                          disabled={asSingle ? applyValue.length < 1 : applyValue.length < 2}
+                          disabled={
+                            asSingle
+                              ? applyValue.length < 1
+                              : applyValue.length < 2
+                          }
                           style={styles?.apply}
                           onClick={applyDate}
                         >

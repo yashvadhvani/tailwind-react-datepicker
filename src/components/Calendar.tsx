@@ -50,8 +50,8 @@ export const Calender = ({
         const isSelected = isBetweenRange(date) || date.hovered();
         let datePickerStyle = datePickerCss.css ? datePickerCss.css : {};
         datePickerStyle = {
+          ...(selectionColor.text && isBetweenRange(date) ? { color: selectionColor.text } : {}),
           ...datePickerStyle,
-          ...(selectionColor.text && isSelected ? { color: selectionColor.text } : {}),
         };
         return (
           <div

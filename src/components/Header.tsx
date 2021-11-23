@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface IHeaderProps {
   panel: any;
@@ -16,9 +16,7 @@ const Header = ({ panel, calendar, Icons }: IHeaderProps) => (
           <button
             type="button"
             className="p-1.5 rounded-full bg-white text-litepie-secondary-600 transition-colors border border-transparent hover:bg-litepie-secondary-100 hover:text-litepie-secondary-900 focus:bg-litepie-primary-50 focus:text-litepie-secondary-900 focus:border-litepie-primary-300 focus:ring focus:ring-litepie-primary-500 focus:ring-opacity-10 focus:outline-none dark:bg-litepie-secondary-800 dark:text-litepie-secondary-300 dark:hover:bg-litepie-secondary-700 dark:hover:text-litepie-secondary-300 dark:focus:bg-litepie-secondary-600 dark:focus:text-litepie-secondary-100 dark:focus:border-litepie-primary-500 dark:focus:ring-opacity-25 dark:focus:bg-opacity-50"
-            onClick={
-              panel.calendar ? calendar.onPrevious : calendar.onPreviousYear
-            }
+            onClick={panel.calendar ? calendar.onPrevious : calendar.onPreviousYear}
           >
             {Icons.Prev ? (
               Icons.Prev
@@ -34,11 +32,7 @@ const Header = ({ panel, calendar, Icons }: IHeaderProps) => (
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="1.5"
-                  d={
-                    panel.calendar
-                      ? `M15 19l-7-7 7-7`
-                      : `M11 19l-7-7 7-7m8 14l-7-7 7-7`
-                  }
+                  d={panel.calendar ? `M15 19l-7-7 7-7` : `M11 19l-7-7 7-7m8 14l-7-7 7-7`}
                 />
               </svg>
             )}
@@ -88,11 +82,7 @@ const Header = ({ panel, calendar, Icons }: IHeaderProps) => (
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="1.5"
-                  d={
-                    panel.calendar
-                      ? `M9 5l7 7-7 7`
-                      : `M13 5l7 7-7 7M5 5l7 7-7 7`
-                  }
+                  d={panel.calendar ? `M9 5l7 7-7 7` : `M13 5l7 7-7 7M5 5l7 7-7 7`}
                 />
               </svg>
             )}

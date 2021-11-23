@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-console */
 /* eslint-disable no-nested-ternary */
 import React from "react";
@@ -984,9 +985,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (
       classes = today
         ? {
             class: `text-litepie-primary-500 font-semibold dark:text-litepie-primary-400 rounded-full`,
-            css: selectionColor.ends.text
-              ? { color: selectionColor.ends.text }
-              : undefined,
+            css: { color: selectionColor.ends.text },
           }
         : disabled
         ? {
@@ -1015,23 +1014,26 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (
           ? {
               class:
                 "bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed",
-              css: selectionColor.ends.background
-                ? { backgroundColor: selectionColor.ends.background }
-                : undefined,
+              css: {
+                backgroundColor: selectionColor.ends.background,
+                color: selectionColor.ends.text,
+              },
             }
           : {
               class:
                 "bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed",
-              css: selectionColor.ends.background
-                ? { backgroundColor: selectionColor.ends.background }
-                : undefined,
+              css: {
+                backgroundColor: selectionColor.ends.background,
+                color: selectionColor.ends.text,
+              },
             };
         if (s.isSame(e, "date")) {
           classes = {
             class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
-            css: selectionColor.ends.background
-              ? { backgroundColor: selectionColor.ends.background }
-              : undefined,
+            css: {
+              backgroundColor: selectionColor.ends.background,
+              color: selectionColor.ends.text,
+            },
           };
         }
       }
@@ -1040,23 +1042,26 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (
           ? {
               class:
                 "bg-litepie-primary-500 text-white font-bold rounded-r-full disabled:cursor-not-allowed",
-              css: selectionColor.ends.background
-                ? { backgroundColor: selectionColor.ends.background }
-                : undefined,
+              css: {
+                backgroundColor: selectionColor.ends.background,
+                color: selectionColor.ends.text,
+              },
             }
           : {
               class:
                 "bg-litepie-primary-500 text-white font-bold rounded-l-full disabled:cursor-not-allowed",
-              css: selectionColor.ends.background
-                ? { backgroundColor: selectionColor.ends.background }
-                : undefined,
+              css: {
+                backgroundColor: selectionColor.ends.background,
+                color: selectionColor.ends.text,
+              },
             };
         if (s.isSame(e, "date")) {
           classes = {
             class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
-            css: selectionColor.ends.background
-              ? { backgroundColor: selectionColor.ends.background }
-              : undefined,
+            css: {
+              backgroundColor: selectionColor.ends.background,
+              color: selectionColor.ends.text,
+            },
           };
         }
       }
@@ -1064,9 +1069,10 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (
       if (date.isSame(s, "date") && !off) {
         classes = {
           class: `bg-litepie-primary-500 text-white font-bold rounded-full disabled:cursor-not-allowed`,
-          css: selectionColor.ends.background
-            ? { backgroundColor: selectionColor.ends.background }
-            : undefined,
+          css: {
+            backgroundColor: selectionColor.ends.background,
+            color: selectionColor.ends.text,
+          },
         };
       }
     }

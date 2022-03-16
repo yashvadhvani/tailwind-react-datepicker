@@ -9,7 +9,7 @@ interface IHeaderProps {
   };
 }
 const Header = ({ panel, calendar, Icons }: IHeaderProps) => (
-  <div className="flex justify-between items-center px-2 py-1.5 rounded-md border border-black border-opacity-10 dark:border-litepie-secondary-700 dark:border-opacity-100 litepie-header">
+  <div className="flex justify-between items-center px-2 py-1.5 rounded-md border border-black border-opacity-10 dark:border-litepie-secondary-700 dark:border-opacity-100">
     <div className="flex-shrink-0">
       {(panel.calendar || panel.year) && (
         <span className="inline-flex rounded-full">

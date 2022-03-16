@@ -6,7 +6,7 @@ interface IMonthProps {
   updateMonth: Function;
 }
 const Month = ({ months, updateMonth }: IMonthProps) => (
-  <div className="flex flex-wrap mt-1.5 litepie-month">
+  <div className="flex flex-wrap mt-1.5">
     {months.map((month: any, key: number) => (
       <div key={key} className="w-1/2 px-0.5">
         <span className="flex rounded-md mt-1.5">

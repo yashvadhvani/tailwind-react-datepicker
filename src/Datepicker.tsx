@@ -1411,7 +1411,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
       <button
         ref={LitepieButtonRef}
         type="button"
-        className="flex items-center justify-center flex-none py-3 space-x-2 font-mono text-xs font-semibold leading-6 text-gray-400 transition duration-300 ease-out border border-gray-200 sm:w-auto sm:text-base bg-gray-50 hover:text-gray-900 sm:px-6 rounded-xl sm:space-x-4 focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-gray-300 focus:outline-none"
+        className="flex items-center justify-center flex-none py-3 space-x-2 font-mono text-xs font-semibold leading-6 text-gray-400 transition duration-300 ease-out border border-gray-200 sm:w-auto sm:text-base bg-gray-50 hover:text-gray-900 sm:px-6 rounded-xl sm:space-x-4 focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-gray-300 focus:outline-none litepie-calendar-button"
         onClick={() => setShow(!show)}
       >
         {CalenderIcon}

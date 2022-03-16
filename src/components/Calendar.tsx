@@ -43,7 +43,7 @@ export const Calender = ({
       exitActive: 'transition-opacity duration-200 ease-in',
     }}
   >
-    <div className="grid grid-cols-7 gap-y-0.5 my-1">
+    <div className="grid grid-cols-7 gap-y-0.5 my-1 litepie-calendar">
       {calendar.date().map((date: any, keyDate: number) => {
         const css = betweenRangeClasses(date);
         const datePickerCss = datepickerClasses(date);

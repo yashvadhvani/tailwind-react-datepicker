@@ -25,7 +25,7 @@ const Shortcut = ({
   //   return shortcuts();
   // }
   //   false;
-  <div className="relative order-last w-full border-t border-b-0 border-black sm:border-t-0 sm:border-b lg:border-b-0 lg:border-r border-opacity-10 sm:order-none dark:border-litepie-secondary-700 dark:border-opacity-100 sm:mt-1 lg:mr-1 sm:mb-1 lg:mb-0 sm:mx-1 lg:mx-0">
+  <div className="relative order-last w-full border-t border-b-0 border-black sm:border-t-0 sm:border-b lg:border-b-0 lg:border-r border-opacity-10 sm:order-none dark:border-litepie-secondary-700 dark:border-opacity-100 sm:mt-1 lg:mr-1 sm:mb-1 lg:mb-0 sm:mx-1 lg:mx-0 litepie-shortcut">
     {/* {withShortcut ? (
             <ol className="grid grid-cols-2 sm:grid-cols-3 gap-1 lg:block w-full pr-0 sm:pr-1 mt-1.5 sm:mt-0 sm:mb-1.5 lg:mb-0">
               {withShortcut().map((item: any, i: number) => (

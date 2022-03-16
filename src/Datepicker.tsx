@@ -1460,7 +1460,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                         </div>
 
                         <div
-                          className={`litepie-section relative w-full sm:w-80${asRange() && !asSingle ? ' mb-3 sm:mb-0 sm:mr-2' : ''}`}
+                          className={`litepie-sections relative w-full sm:w-80${asRange() && !asSingle ? ' mb-3 sm:mb-0 sm:mr-2' : ''}`}
                         >
                           <LitepieHeader panel={panel.previous} calendar={calendar.previous} Icons={HeaderIcons} />
                           <div className="px-0.5 sm:px-2">
@@ -1495,7 +1495,7 @@ const Datepicker: React.FunctionComponent<IDatePickerProps> = (props: IDatePicke
                       </>
                     )}
                     {asRange() && !asSingle && (
-                      <div className="litepie-section relative w-full mt-3 overflow-hidden sm:w-80 sm:mt-0 sm:ml-2">
+                      <div className="litepie-sections relative w-full mt-3 overflow-hidden sm:w-80 sm:mt-0 sm:ml-2">
                         <LitepieHeader panel={panel.next} calendar={calendar.next} Icons={HeaderIcons} />
                         <div className="px-0.5 sm:px-2">
                           {panel.next.month && <LitepieMonth months={months()} updateMonth={calendar.next.setMonth} />}
